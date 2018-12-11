@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block menu_list %}
+    <li class="treeview active">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span>app构建与申请</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li class="active"><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li><a href="/appmanager/ShowCheckInfo/"><i class="fa fa-circle-o"></i>查看申请</a></li>
+          </ul>
+            </li>
+     <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo/"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+{% endblock %}
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">App列表信息</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="table_detail" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>app名字</th>
+                  <th>端口</th>
+                  <th>ip_dev</th>
+                  <th>ip_test</th>
+                    <th>ip_demo</th>
+                    <th>添加时间</th>
+                </tr>
+                </thead>
+                <tbody>
+{% for app in apps%}
+<tr>
+    <td>{{ app.id }}</td>
+    <td>{{ app.App_name }}</td>
+    <td>{{ app.App_port}}</td>
+    <td>{{ app.App_ip_dev }}</td>
+    <td>{{ app.App_ip_test }}</td>
+    <td>{{ app.App_ip_demo }}</td>
+    <td>{{ app.Apply_date|date:"Y-m-d H:i:s" }}
+</tr>
+
+{% endfor %}
+                </tbody></table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+{% endblock %}
+{% block js_file %}
+<!-- DataTables -->
+<script src="/static/dashboard/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/dashboard/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="/static/dashboard/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#table_detail').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+
+{% endblock %}

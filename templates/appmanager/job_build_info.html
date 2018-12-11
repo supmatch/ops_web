@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block style_file %}
+<style>
+
+    #col-output{
+        height: 800px;
+    }
+#col-output textarea{
+        height: 800px;
+    }
+.col-sm-10{
+    margin-bottom: 20px;
+}
+    </style>
+{% endblock %}
+{% block menu_list %}
+                <li class="treeview active">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span>app构建与申请</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li class="active"><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>查看申请</a></li>
+          </ul>
+            </li>
+     <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+{% endblock %}
+
+{% block content %}
+      <div class="content-wrapper">
+    <!-- Main content -->
+    <!-- /.content -->
+    <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">查看构建信息</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+
+
+              <div class="box-body">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">项目名称</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="app_name" class="form-control" value="{{ app_name }}" placeholder="请填写Jenkins上的完整job名" name="app_name" onblur="start()">
+                  </div>
+                </div>
+            <div class="form-group">
+                  <label class="col-sm-2 control-label">构建信息</label>
+                  <div class="col-sm-10" id="col-output">
+                      <textarea  id="output" class="form-control" name="output"></textarea>
+                  </div>
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+{% endblock %}
+{% block js_file %}
+<script type="text/javascript">
+function start() {
+    var app_name=$('input[name=app_name]')[0].value;
+    if(app_name==''){alert("项目名称不能为空");}
+        else {
+    var myVar = setInterval(function(){get_output()},2000);
+    function get_output(){
+        var str = "Finished:";
+        $.ajax({
+            url:"/appmanager/GetConsoleOut/",
+            type:"get",
+            data:{app_name:app_name},
+            success:function (data) {
+                $('#output').html(data);
+                if(data.search(str)!=-1){
+                   clearInterval(myVar);
+                }
+            }}
+            );
+
+    }}
+}
+</script>
+{% endblock %}

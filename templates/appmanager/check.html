@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% block style_file %}
+<link rel="stylesheet" href="/static/css/check/addapp_form.css">
+{% endblock %}
+{% block menu_list %}
+            <li class="treeview active">
+          <a href="#">
+            <i class="fa fa-edit"></i> <span>app管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li  class="active"><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+         <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+{% endblock %}
+{% block content %}
+  <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+    <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">点击查看详情</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="table_detail" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                  <th>id</th>
+                  <th>app名字</th>
+                  <th>端口</th>
+                  <th>ip_dev</th>
+                  <th>ip_test</th>
+                    <th>ip_demo</th>
+                    <th>添加时间</th>
+                </tr>
+                </thead>
+                <tbody>
+{% for app in check_infos%}
+<tr>
+    <td>{{ app.id }}</td>
+    <td><a href = "javascript:void(0)" onclick = "document.getElementById('{{ app.id }}').style.display='block';">{{ app.App_name }}</a></td>
+    <td>{{ app.App_port}}</td>
+    <td>{{ app.App_ip_dev }}</td>
+    <td>{{ app.App_ip_test }}</td>
+    <td>{{ app.App_ip_demo }}</td>
+    <td>{{ app.Apply_date|date:"Y-m-d H:i:s" }}
+</tr>
+        <div id="{{ app.id }}" class="white_content">
+{% if request.user.username == 'admin' %}
+    <form class="form-horizontal" method="post" action="/appmanager/CheckOperate/">
+        {% csrf_token %}
+            <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目名称</label>
+                  <div class="col-sm-10">
+                    <input type="text" id="app_name" value="{{ app.App_name }}" name="app_name">
+                  </div>
+                </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">端口</label>
+                        <div class="col-sm-10">
+                        <input id="app_port" name="app_port" value="{{ app.App_port }}">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Test环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_test" name="app_ip_test" value="{{ app.App_ip_test }}">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Dev环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_dev" name="app_ip_dev" value="{{ app.App_ip_dev }}">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Demo环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_demo" name="app_ip_demo" value="{{ app.App_ip_demo }}">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目Git地址</label>
+                        <div class="col-sm-10">
+                        <input id="git_url" name="git_url" value="{{ app.Git_Url}}">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">编译命令</label>
+                        <div class="col-sm-10">
+                            <input id="env_list" name="env_list" value="{{ app.Env_list }}">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">域名</label>
+                        <div class="col-sm-10">
+                        <input id="proxy_state" name="proxy_state" value="{{ app.Proxy_state}}">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">申请人</label>
+                        <div class="col-sm-10">
+                        <input id="apply_user" name="apply_user" value="{{ app.Apply_user}}" readonly="true">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">申请时间</label>
+                        <div class="col-sm-10">
+                        <input id="apply_date" name="apply_date" value="{{ app.Apply_date|date:"Y-m-d H:i:s"}}" readonly="true">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">备注</label>
+                        <div class="col-sm-10">
+                            <textarea id="remarks" name="remarks" value="{{ app.remarks }}"></textarea>
+                  </div>
+                  </div>
+                        <div class="form-group">
+                  <div class="col-sm-2 control-label">
+                    <label>
+                    <label  class="col-sm-10">过审</label>
+                    </label>
+                  </div>
+                  <div class="col-sm-10">
+                    <label>
+                      <input type="radio" name="status" value="True" checked="checked">
+                      是
+                    </label>
+                  </div>
+                  <div class="col-sm-10">
+                    <label>
+                      <input type="radio" name="status" value="False">
+                      否
+                    </label>
+                  </div>
+                </div>
+        <div class="box-footer">
+                <button type="submit" class="btn btn-default" onclick="javascript:this.form.action='/appmanager/ShowCheckInfo/';">取消</button>
+                <button type="submit" class="btn btn-info pull-right" id="submit">提交</button>
+              </div>
+    </form>
+{% else %}
+    <div>
+    <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目名称</label>
+                  <ul class="col-sm-10">
+                    {{ app.App_name }}
+                  </ul>
+                </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">端口</label>
+                        <ul class="col-sm-10">
+                       {{ app.App_port }}
+                  </ul>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Test环境ip</label>
+                        <ul class="col-sm-10">
+                        {{ app.App_ip_test }}
+                  </ul>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Dev环境ip</label>
+                        <ul class="col-sm-10">
+                        {{ app.App_ip_dev }}
+                  </ul>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Demo环境ip</label>
+                        <ul class="col-sm-10">
+                        {{ app.App_ip_demo }}
+                  </ul>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目Git地址</label>
+                        <ul class="col-sm-10">
+                        {{ app.Git_Url}}
+                  </ul>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">编译命令</label>
+                        <ul class="col-sm-10">
+                            {{ app.Env_list }}
+                  </ul>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">域名</label>
+                        <ul class="col-sm-10">
+                        {{ app.Proxy_state}}
+                  </ul>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">申请人</label>
+                        <ul class="col-sm-10">
+                        {% if app.Apply_user == '' %}
+                            无
+                            {% else %}
+                            {{ app.Apply_user}}
+                            {% endif %}
+                  </ul>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">申请时间</label>
+                        <ul class="col-sm-10">
+                        {{ app.Apply_date|date:"Y-m-d H:i:s"}}
+                  </ul>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">备注</label>
+                        <ul class="col-sm-10">
+                            {{ app.remarks }}
+                  </ul>
+                  </div>
+
+        <div>
+            <a href = "javascript:void(0)" onclick = "document.getElementById('{{ app.id }}').style.display='none';">关闭</a></div>
+    </div>
+        {% endif %}
+        </div>
+
+{% endfor %}
+
+                </tbody>
+              </table>
+             <nav aria-label="Page navigation">
+    <ul class="pagination">
+        {% if check_infos.has_previous %}
+            <li>
+            <a href="?page={{ check_infos.previous_page_number }}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+            </li>
+        {% endif %}
+{% for pg in check_infos.paginator.page_range %}
+    {% if check_infos.number == pg %}
+    <li class="active"><a href="?page={{ pg }}">{{ pg }}</a></li>
+    {% else %}
+    <li><a href="?page={{ pg }}">{{ pg }}</a></li>
+    {% endif %}
+{% endfor %}
+        {% if check_infos.has_next %}
+            <li>
+            <a href="?page={{ check_infos.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a></li>
+        {% endif %}
+</ul>
+            </nav>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      </div>
+      <!-- /.row -->
+    </section>
+    <!-- /.content -->
+  </div>
+
+{% endblock %}
+{% block js_file %}
+<!-- DataTables -->
+<script src="/static/dashboard/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="/static/dashboard/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#table_detail').DataTable({
+      'paging'      : false,
+      'lengthChange': false,
+      'searching'   : true,
+      'ordering'    : true,
+      'info'        : false,
+      'autoWidth'   : false
+    })
+  })
+</script>
+
+{% endblock %}

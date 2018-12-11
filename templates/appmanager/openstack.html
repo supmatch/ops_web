@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block style_file %}
+<style>
+
+    #col-output{
+        height: 600px;
+        margin-top: 20px;
+    }
+#col-output textarea{
+        height: 580px;
+    }
+.col-sm-10{
+    margin-bottom: 20px;
+}
+#submit{
+    margin-right: 30px;
+}
+    </style>
+{% endblock %}
+{% block menu_list %}
+                <li class="treeview">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span>app构建与申请</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>查看申请</a></li>
+          </ul>
+            </li>
+     <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+    <li class="treeview active">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>虚拟机管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li class="active"><a href="/appmanager/AddServerApply"><i class="fa fa-circle-o"></i>创建虚拟机</a></li>
+              <li><a href="/appmanager/ShowServerInfo"><i class="fa fa-circle-o"></i>查看虚拟机信息</a></li>
+          </ul>
+            </li>
+{% endblock %}
+
+{% block content %}
+      <div class="content-wrapper">
+    <!-- Main content -->
+    <!-- /.content -->
+    <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">添加虚拟机</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+                        {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">虚拟机名称</label>
+
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="请按照环境和功能填写" name="server_name" onkeyup="check_name()">
+                  </div>
+                </div>
+
+                  <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">镜像</label>
+                        <div class="col-sm-10">
+                        <select id="image" name="image">
+                            {% for image in images %}
+                                <option name="{{ image.id }}" value="{{ image.id }}">{{ image.name }}</option>
+                            {% endfor %}
+                        </select>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">配置</label>
+                        <div class="col-sm-10">
+                        <select id="flavor" name="flavor">
+                            {% for flavor in flavors %}
+                                <option name="{{ flavor.id }}" value="{{ flavor.id }}">{{ flavor.name }}</option>
+                            {% endfor %}
+                        </select>
+                  </div>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" id="submit" class="btn btn-info pull-right" onclick="create()" disabled="disabled">创建</button>
+              </div>
+              <!-- /.box-footer -->
+          </div>
+        </div>
+{% endblock %}
+{% block js_file %}
+<script type="text/javascript">
+function check_name() {
+        var server_name=$('input[name=server_name]')[0].value;
+        if(server_name==''){alert("虚拟机名称不能为空");}
+        $.ajax({
+            url: "/appmanager/CheckServerName/",
+            type:"get",
+            data:{server_name:server_name},
+            success:function (data) {
+                if(data=='success'){
+                    alert("名称可以使用");
+                    $("#submit").removeAttr("disabled");
+                }
+                else{
+                    alert("已存在");
+                    $("#submit").attr("disabled", "disabled");
+                }
+
+            }
+        });
+}
+
+    function create(){
+        var server_name=$('input[name=server_name]')[0].value;
+        var image=$('#image').find("option:selected").val();
+        var flavor=$('#flavor').find("option:selected").val();
+        var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+        $.ajax({
+            url:"/appmanager/CreateServer/",
+            type:"post",
+            data:{server_name:server_name, image:image, flavor:flavor, "csrfmiddlewaretoken":csrfToken},
+            success:function (data) {
+                alert(data);
+            }});
+    }
+
+
+
+</script>
+{% endblock %}
+
+
+
+

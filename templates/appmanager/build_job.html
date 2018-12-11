@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block style_file %}
+<style>
+
+    #col-output{
+        height: 600px;
+        margin-top: 20px;
+    }
+#col-output textarea{
+        height: 580px;
+    }
+.col-sm-10{
+    margin-bottom: 20px;
+}
+#submit{
+    margin-right: 30px;
+}
+    </style>
+{% endblock %}
+{% block menu_list %}
+                <li class="treeview active">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span>app构建与申请</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li  class="active"><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>查看申请</a></li>
+          </ul>
+            </li>
+     <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+{% endblock %}
+
+{% block content %}
+      <div class="content-wrapper">
+    <!-- Main content -->
+    <!-- /.content -->
+    <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">构建job</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+                        {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">项目名称</label>
+
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" placeholder="请填写Jenkins上的完整job名" name="app_name" onblur="get_branches()">
+                  </div>
+                </div>
+
+                  <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">Git分支</label>
+                        <div class="col-sm-10">
+                        <select id="branch" name="branch">
+                        </select>
+                  </div>
+                  </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" id="submit" class="btn btn-info pull-right" onclick="build()">构建</button>
+              </div>
+                  <div class="form-group" id="col-output">
+                  <label class="col-sm-2 control-label">构建信息</label>
+                  <div class="col-sm-10">
+                      <textarea  id="output" class="form-control" name="output"></textarea>
+                  </div>
+                </div>
+              <!-- /.box-footer -->
+          </div>
+        </div>
+{% endblock %}
+{% block js_file %}
+<script type="text/javascript">
+    function get_branches(){
+        var app_name=$('input[name=app_name]')[0].value;
+        if(app_name==''){alert("项目名称不能为空");}
+        else {
+        $.ajax({
+            url:"/appmanager/GetBranch/",
+            type:"get",
+            data:{app_name:app_name},
+            success:function (data) {
+                var content='';
+                var env = data[data.length-1];
+                if(data=='false'){alert("项目不合法，无法显示分支！");}
+                else {for(var item in data) {
+                    if(item == data.length-1){}
+                    else if(data[item] == env)
+                    {content+='<option name="branch" selected="selected" value='+data[item]+'>'+data[item]+'</option>'}
+                    else {content+='<option name="branch" value='+data[item]+'>'+data[item]+'</option>'}
+                }
+                $('#branch').html(content)
+            }}
+            });}
+    }
+function build() {
+    var app_name=$('input[name=app_name]')[0].value;
+    var branch=$('#branch').find("option:selected").val();
+    var csrfToken = $('[name="csrfmiddlewaretoken"]').val();
+    $.ajax({
+        url:"/appmanager/BuildJob/",
+        type:"post",
+        data:{"app_name":app_name, "branch":branch, "csrfmiddlewaretoken":csrfToken},
+        success:function(data) {
+            start(app_name)
+        }
+        });
+}
+
+function start(app_name) {
+    var myVar = setInterval(function(){get_output()},2000);
+    function get_output(){
+        var str = "Finished:";
+        var obj = document.getElementById("output");
+        $.ajax({
+            url:"/appmanager/GetConsoleOut/",
+            type:"get",
+            data:{app_name:app_name},
+            success:function (data) {
+                $('#output').html(data);
+                obj.scrollTop = obj.scrollHeight;
+                if(data.search(str)!=-1){
+                   clearInterval(myVar);
+                }
+            }}
+            );
+
+    }
+}
+    
+</script>
+{% endblock %}

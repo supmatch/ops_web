@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block style_file %}
+  <link rel="stylesheet" href="/static/dashboard/bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/static/dashboard/bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/dashboard/bower_components/Ionicons/css/ionicons.min.css">
+  <link rel="stylesheet" href="/static/dashboard/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="/static/dashboard/dist/css/skins/_all-skins.min.css">
+ <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="https://fonts.lug.ustc.edu.cn/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+{% endblock %}
+{% block menu_list %}
+            <li class="treeview active">
+          <a href="#">
+            <i class="fa fa-edit"></i> <span>app管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li  class="active"><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+          </ul>
+            </li>
+{% endblock %}
+
+{% block content %}
+     <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+
+        <small></small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+      </ol>
+    </section>
+     <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">申请提交失败，联系管理员查看详情</h3>
+            </div>
+
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block style_file %}
+    <link rel="stylesheet" href="/static/css/check/addfe_form.css">
+    <style>
+    .form-group span{
+        color: red;
+    }
+    </style>
+{% endblock %}
+{% block menu_list %}
+           <li class="treeview active">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span>app构建与申请</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="/appmanager/"><i class="fa fa-circle-o"></i>查看app信息</a></li>
+            <li><a href="/appmanager/AddAppForm/"><i class="fa fa-circle-o"></i>后端申请</a></li>
+              <li class="active"><a href="/appmanager/AddFeForm/"><i class="fa fa-circle-o"></i>前端申请</a></li>
+            <li><a href="/appmanager/BuildJob/"><i class="fa fa-circle-o"></i>构建job</a></li>
+              <li><a href="/appmanager/ShowConsoleOut/"><i class="fa fa-circle-o"></i>查看构建信息</a></li>
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>查看申请</a></li>
+          </ul>
+            </li>
+     <li class="treeview">
+          <a href="#">
+            <i class="fa fa-edit"></i><span>申请审核</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+              <li><a href="/appmanager/ShowCheckInfo"><i class="fa fa-circle-o"></i>申请列表</a></li>
+          </ul>
+            </li>
+{% endblock %}
+
+    {% block content %}
+      <div class="content-wrapper">
+    <!-- Main content -->
+    <!-- /.content -->
+    <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">前端申请单</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal" method="post" action="/appmanager/SaveApply/">
+                        {% csrf_token %}
+              <div class="box-body">
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目名称</label>
+
+                  <div class="col-sm-10">
+                    <input type="text" id="app_name" placeholder="请填写Jenkins上的job名" name="app_name" onkeyup="v_app_name()" onblur="check_name()">
+                      <span class="app_name">*必填项</span>
+                  </div>
+                </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">端口</label>
+                        <div class="col-sm-10">
+                        <input id="app_port" name="app_port" value="80" readonly="readonly">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Test环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_test" name="app_ip_test" onkeyup="v_app_ip_test()">
+                            <span class="app_ip_test">*必填项</span>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Dev环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_dev" name="app_ip_dev" type="text" onkeyup="v_app_ip_dev()">
+                            <span class="app_ip_dev">*必填项</span>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Demo环境ip</label>
+                        <div class="col-sm-10">
+                        <input id="app_ip_demo" name="app_ip_demo" onkeyup="v_app_ip_demo()">
+                            <span class="app_ip_demo">*必填项</span>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">项目Git地址</label>
+                        <div class="col-sm-10">
+                        <input id="git_url" name="git_url" onkeyup="v_git_url()">
+                            <span class="git_url">*必填项</span>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Test编译命令</label>
+                        <div class="col-sm-10">
+                        <input id="build_cmd_test" name="build_cmd_test"  value="npm run build test">
+                  </div>
+                  </div>
+                <div class="form-group">
+                  <label  class="col-sm-2 control-label">Dev编译命令</label>
+                        <div class="col-sm-10">
+                        <input id="build_cmd_dev" name="build_cmd_dev"  value="npm run build dev">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Demo编译命令</label>
+                        <div class="col-sm-10">
+                        <input id="build_cmd_demo" name="build_cmd_demo"  value="npm run build demo">
+                  </div>
+                  </div>
+                  <div class="form-group">
+                  <label  class="col-sm-2 control-label">Uat编译命令</label>
+                        <div class="col-sm-10">
+                        <input id="build_cmd_uat" name="build_cmd_uat"  value="npm run build production">
+                  </div>
+                  </div>
+                  <input type="hidden" name="proxy" value="True">
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <button type="submit" class="btn btn-default">取消</button>
+                <button type="submit" class="btn btn-info pull-right" id="submit" disabled="disabled">提交</button>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          </div>
+        </div>
+{% endblock %}
+
+{% block js_file %}
+<script type="text/javascript" src="/static/js/addfe_form.js"></script>
+
+{% endblock %}
