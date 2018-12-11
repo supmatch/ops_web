@@ -1,0 +1,50 @@
+.white_content {
+            display: none;
+            position: absolute;
+            width: 700px;
+            height: 600px;
+            padding: 20px;
+            border: 5px solid orange;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+        .white_content input{
+            margin-bottom: 10px;
+        }
+        .form-group #app_name{
+       width: 500px;
+    }
+    .form-group #app_port{
+       width: 500px;
+    }
+    .form-group #app_ip_test{
+       width: 500px;
+    }
+    .form-group #app_ip_dev{
+       width: 500px;
+    }
+    .form-group #app_ip_demo{
+       width: 500px;
+    }
+    .form-group #git_url{
+       width: 500px;
+    }
+    .form-group #env_list{
+       width: 500px;
+    }
+    .form-group #remarks{
+       width: 500px;
+    }
+    .form-group #build_cmd_test{
+       width: 500px;
+    }
+    .form-group #build_cmd_dev{
+       width: 500px;
+    }
+    .form-group #build_cmd_demo{
+       width: 500px;
+    }
+    .form-group #build_cmd_uat{
+       width: 500px;
+    }
