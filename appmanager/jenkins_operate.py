@@ -1,7 +1,7 @@
 from django.shortcuts import HttpResponse, render
 import jenkins
 
-server = jenkins.Jenkins('http://ci.dev.kingxunlian.com', username='qianzhong', password='Aa123456')
+server = jenkins.Jenkins('http://youjenkins.com', username=username, password=password)
 xml_file = "/tmp/config.xml"
 
 
@@ -9,7 +9,7 @@ def check_job(app_name):
     env = 'dev'
     if server.job_exists('dev' + '-' + app_name):
         msg = 'true'
-    elif server.job_exists(app_name.split('.')[0] + '.' + env + '.kingxunlian.com'):
+    elif server.job_exists(app_name.split('.')[0] + '.' + env + '.youdomain.com'):
         msg = 'true'
     else:
         msg = ''
@@ -61,7 +61,7 @@ def create_new_job(env, app_name):
     if app_name.find('.com') == -1:
         server.create_job(env+'-'+app_name, xml)
     elif env != 'uat':
-        job_name = app_name.split('.')[0]+'.'+ env + '.kingxunlian.com'
+        job_name = app_name.split('.')[0]+'.'+ env + '.youdomain.com'
         server.create_job(job_name, xml)
     else:
         server.create_job(app_name, xml)
