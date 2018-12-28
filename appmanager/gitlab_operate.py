@@ -9,9 +9,9 @@ import logging
 logger = logging.getLogger('django')
 
 
-private_token = {"PRIVATE-TOKEN": "s1NnzG9Hvz3szUYyfhc9"}
-token = "s1NnzG9Hvz3szUYyfhc9"
-gitlab_Url = "http://gitlab.kingxunlian.com"
+private_token = {"PRIVATE-TOKEN": "PRIVATE-TOKEN"}
+token = token
+gitlab_Url = "http://gitlab.testdomain.com"
 query_Uri = "/api/v4/projects?search="
 
 '''
@@ -38,15 +38,15 @@ def get_project_id(app_name, git_url):
 def create_project_hook(env, app_name, git_url):
     project_id = get_project_id(app_name, git_url)
     if app_name.find('.com') == -1:
-        add_webhook_data = {"id": project_id, "url": "http://ci.dev.kingxunlian.com/project/" + env + "-" + app_name,
-                            "enable_ssl_verification": "true", "token": "44e8d3851e457dfa3799f82e2ff22346"}
+        add_webhook_data = {"id": project_id, "url": "http://yourjenkins.com/project/" + env + "-" + app_name,
+                            "enable_ssl_verification": "true", "token": "jenkins_token"}
     elif env != 'uat':
-        job_name = app_name.split('.')[0]+'.'+ env + '.kingxunlian.com'
-        add_webhook_data = {"id": project_id, "url": "http://ci.dev.kingxunlian.com/project/" + job_name,
-                            "enable_ssl_verification": "true", "token": "fd637a85a6f8f4421d6da86593db13d7"}
+        job_name = app_name.split('.')[0]+'.'+ env + '.testdomain.com'
+        add_webhook_data = {"id": project_id, "url": "http://yourjenkins.com/project/" + job_name,
+                            "enable_ssl_verification": "true", "token": "jenkins_token"}
     else:
-        add_webhook_data = {"id": project_id, "url": "http://ci.dev.kingxunlian.com/project/" + app_name,
-                            "enable_ssl_verification": "true", "token": "fd637a85a6f8f4421d6da86593db13d7"}
+        add_webhook_data = {"id": project_id, "url": "http://yourjenkins.com/project/" + app_name,
+                            "enable_ssl_verification": "true", "token": "jenkins_token"}
     req = request.Request(gitlab_Url + "/api/v4/projects/" + str(project_id) + "/hooks",
                           urlencode(add_webhook_data).encode(), headers=private_token)
     print(app_name, project_id)
