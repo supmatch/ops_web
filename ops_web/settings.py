@@ -85,10 +85,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'app_manage',
-        'HOST': '111.230.10.100',
+        'HOST': '127.0.0.1',
         'PORT': '3306',
-        'USER': 'kingxl',
-        'PASSWORD': '.QJ.W2gUJgXaI',
+        'USER': 'test',
+        'PASSWORD': '123456',
     }
 }
 
@@ -183,6 +183,6 @@ SESSION_SAVE_EVERY_REQUEST = False
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.qq.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = '120612671@qq.com'
-EMAIL_HOST_PASSWORD = 'hlswrwrwmuctbjde'
+EMAIL_HOST_USER = email_address
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
