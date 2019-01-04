@@ -12,7 +12,7 @@ def make_host_file(env, app_name, app_ip, app_port, proxy_state):
     if os.path.exists(file_path) is False:
         os.makedirs(file_path)
     if app_name.find('.com') != -1:
-        app_name = app_name.split('.')[0] + '.' + env + '.kingxunlian.com'
+        app_name = app_name.split('.')[0] + '.' + env + '.test.com'
     file_name = '{}/{}'.format(file_path, app_name)
     data = '[' + app_name + ']' + '\n' + app_ip
     message = 'add a new {}-{}-{}'.format(app_name, env, file_name)
